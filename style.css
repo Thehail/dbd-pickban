@@ -13,8 +13,8 @@ body {
 .container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Center items horizontally */
-    align-items: center; /* Center items vertically (if space allows) */
+    justify-content: center;
+  align-items: flex-start; /* Modified align items */
     gap: 8px;
     padding: 15px;
     background: #262626;
@@ -26,7 +26,8 @@ body {
     transition: box-shadow 0.3s ease;
 }
 #initialContainer {
-    min-height: 450px; /* Set minimum height to prevent collapse, adjust as needed */
+    min-height: 450px;
+      display: flex;
 }
 
 .item-container {
@@ -35,13 +36,15 @@ body {
   align-items: center;
     position: relative;
     cursor: pointer;
-    width: 11%;
+    width: 9%;
     transition: transform 0.2s ease;
+      flex-shrink: 1;
 }
 
 .item {
     position: relative;
     width: 100%;
+     max-height: calc(100vh * 0.09 * 0.80) ;
     padding-bottom: 100%;
     overflow: hidden;
 }
@@ -67,7 +70,7 @@ body {
     background-color: rgba(0, 0, 0, 0.7);
   color: #fff;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   padding: 6px 0;
    box-sizing: border-box;
       border-bottom-left-radius: 6px;
@@ -75,6 +78,7 @@ body {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+    flex-shrink: 1;
 }
 .item.banned img {
     filter: grayscale(80%);
