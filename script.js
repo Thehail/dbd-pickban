@@ -11,15 +11,15 @@ const sequence = ['ban', 'ban', 'pick', 'pick', 'ban', 'ban', 'pick', 'pick', 'b
 let currentStep = 0;
 let banCount = 0;
 const initialContainer = document.getElementById('initialContainer');
-const pickBanContainer = document.getElementById('pickBanContainer');
+let pickBanContainer;
 let selectedImagesCount = 0;
 const selectedImages = [];
+let textContainer = document.querySelector(".text-container")
 
 images.forEach((image, idx) => {
     const item = document.createElement('div');
-    item.classList.add('item-container'); // Changed class name to distinguish it
+    item.classList.add('item-container');
      item.innerHTML = `<div class="item"><img src="${image}" alt="Character ${idx + 1}"></div><div class="name-box">${names[idx]}</div>`;
-
 
     item.addEventListener('click', () => handleImageSelection(item, idx));
     initialContainer.appendChild(item);
@@ -33,22 +33,37 @@ function handleImageSelection(item, index) {
 
     const clonedItem = item.cloneNode(true);
     selectedImages.push({item: clonedItem, index:index});
-    pickBanContainer.appendChild(clonedItem);
-      item.style.visibility = 'hidden';
+     item.style.visibility = 'hidden';
             item.style.pointerEvents = 'none';
+    document.getElementById('selection-text').textContent = `${11-selectedImagesCount} killer picks remaining`;
 
     if (selectedImagesCount === 11) {
         initialContainer.remove();
+
+        textContainer = document.createElement('div');
+        textContainer.classList.add('text-container');
+        textContainer.innerHTML = '<div id="selection-text" class="selection-text"></div>'
+        document.body.insertBefore(textContainer, null)
+
+         pickBanContainer = document.createElement('div');
+        pickBanContainer.classList.add('container');
+         pickBanContainer.id = 'pickBanContainer';
         pickBanContainer.style.display = 'flex';
-                selectedImages.forEach(({item, index}) => {
+        document.body.insertBefore(pickBanContainer, null)
+
+        selectedImages.forEach(({item, index}) => {
+            pickBanContainer.appendChild(item);
           item.addEventListener('click', () => handlePickBan(item, index));
         })
+
+
+         updateSelectionText();
     }
 }
 
 
 function handlePickBan(item, index) {
-    if (item.classList.contains('banned') || item.classList.contains('picked')) return;
+    if (item.querySelector('.item').classList.contains('banned') || item.querySelector('.item').classList.contains('picked')) return;
     const action = sequence[currentStep % sequence.length];
   item.querySelector('.item').classList.add(action === 'ban' ? 'banned' : 'picked');
 
@@ -65,6 +80,12 @@ function handlePickBan(item, index) {
 
     currentStep++;
     if (action === 'ban') banCount++;
+        if (banCount === 6) {
+        textContainer.style.display = 'none'; // Remove the text container after the 6th ban
+    }
+
+    updateSelectionText()
+
 
     if (banCount === 6) {
         const remainingItems = [...pickBanContainer.querySelectorAll('.item-container')].filter(item => !item.querySelector('.item').classList.contains('banned') && !item.querySelector('.item').classList.contains('picked'));
@@ -76,4 +97,11 @@ function handlePickBan(item, index) {
           remainingItem.querySelector('.item').appendChild(lastOverlay);
          });
       }
+	
+}
+
+function updateSelectionText() {
+  const action = sequence[currentStep % sequence.length];
+  const selectionText = document.getElementById('selection-text')
+    selectionText.textContent = action === 'ban' ? 'Ban a killer' : 'Pick a killer';
 }
