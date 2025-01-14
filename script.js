@@ -40,11 +40,6 @@ function handleImageSelection(item, index) {
     if (selectedImagesCount === 11) {
         initialContainer.remove();
 
-        textContainer = document.createElement('div');
-        textContainer.classList.add('text-container');
-        textContainer.innerHTML = '<div id="selection-text" class="selection-text"></div>'
-        document.body.insertBefore(textContainer, null)
-
          pickBanContainer = document.createElement('div');
         pickBanContainer.classList.add('container');
          pickBanContainer.id = 'pickBanContainer';
